@@ -22,15 +22,19 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
 
     InitializeGraph();
+    InitializeTelemetryTable();
     OpenCVS();
 
 
     QTimer * timer = new QTimer;
-    connect(timer, &QTimer::timeout, this, &MainWindow::addData);
+    connect(timer, &QTimer::timeout, this, &MainWindow::AddData);
+    connect(timer, &QTimer::timeout, this, &MainWindow::AddToTable);
     timer->start(1000);
+
 
 
 }
@@ -65,7 +69,7 @@ void MainWindow::InitializeGraph()
     ui->minVal->setText(QString::number(minVal));
 }
 
-void MainWindow::addData()
+void MainWindow::AddData()
 {
     srand(time(NULL));
     int rande = rand() % ((100 + 1) - 0 ) + 0;
@@ -94,15 +98,59 @@ void MainWindow::addData()
         ui->minVal->setText(QString::number(minVal));
         Sleep(2000);
     }
-        number++;
+    number++;
 
 
 }
 
-void MainWindow::OpenCvs()
+void MainWindow::InitializeTelemetryTable()
 {
-    QFile cvsFile;
+    telemetryModel = new QStandardItemModel(); //2 Rows and 3 Columns
+
+    telemetryModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Year")));
+    telemetryModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Score")));
+    telemetryModel->setHorizontalHeaderItem(2, new QStandardItem(QString("Title")));
+
+
+    ui->telemetryTable->setModel(telemetryModel);
+    ui->telemetryTable->setColumnWidth(2, 225);
+
 }
 
+void MainWindow::OpenCVS()
+{
+    cvsFile.setFileName("D:/deniro.csv");
+    if(false == cvsFile.open((QIODevice::ReadOnly)))
+    {
+        qDebug() << cvsFile.errorString();
+        return;
+    }
+    qDebug() << "File is opened!!";
+    cvsFile.readLine();
+    return;
 
+}
+
+void MainWindow::AddToTable()
+{
+    if(cvsFile.isOpen())
+    {
+
+            QString line = QString::fromLocal8Bit(cvsFile.readLine());
+            if(line == "\n")
+              return;
+            QStringList lineSplitted = line.remove("\"").remove("\n").split(",");
+            // qDebug() << "line is" << line << lineSplitted;
+            telemetryModel->setItem(rowNumber, 0, new QStandardItem(lineSplitted.at(0)));
+            telemetryModel->setItem(rowNumber, 1, new QStandardItem(lineSplitted.at(1)));
+            telemetryModel->setItem(rowNumber, 2, new QStandardItem(lineSplitted.at(2)));
+            rowNumber++;
+            ui->telemetryTable->scrollToBottom();
+
+    }
+    else
+    {
+        qDebug() << "not added to table!!";
+    }
+}
 

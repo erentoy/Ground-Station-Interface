@@ -23,9 +23,15 @@ private:
     Ui::MainWindow *ui;
     QLineSeries *series;
     QChart *chart;
-    void addData();
+    QStandardItemModel *telemetryModel;
+    QFile cvsFile;
+    int rowNumber = 1;
+
+    void AddData();
     void InitializeGraph();
+    void InitializeTelemetryTable();
     void OpenCVS();
+    void AddToTable();
 
 };
 #endif // MAINWINDOW_H
