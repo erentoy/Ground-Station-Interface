@@ -13,6 +13,9 @@
 #include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #define MaxTime  10
 #define MaxSize  25
@@ -88,6 +91,30 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Couldn't find the correct port for the arduino.\n";
         //QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to arduino.");
     }
+
+    // window widget
+#ifdef _WIN32
+    //Sleep( 3000 );
+    qDebug() << "Windows OS";
+    WId id = (WId) FindWindow(NULL, L"WhatsApp");
+
+    /*
+     * Examples !!
+     * WId id = (WId) FindWindow(NULL, L"Hızlı Erişim - Opera");
+     * WId id = (WId) FindWindow(NULL, L"genel - Discord");
+     * WId id = (WId) FindWindow(NULL, L"WhatsApp");
+     *
+     *
+     */
+
+    qDebug() << id << " is window id";
+    QWindow* window =  QWindow::fromWinId(id);
+    QWidget* widget = QWidget::createWindowContainer(window);
+    QDockWidget* dockWidget = new QDockWidget;
+    dockWidget->setWidget(widget);
+    this->addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+
+#endif
 
 }
 

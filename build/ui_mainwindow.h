@@ -127,7 +127,7 @@ public:
 
         telemetryTable = new QTableView(centralwidget);
         telemetryTable->setObjectName(QString::fromUtf8("telemetryTable"));
-        telemetryTable->setGeometry(QRect(80, 300, 561, 192));
+        telemetryTable->setGeometry(QRect(40, 300, 561, 192));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
