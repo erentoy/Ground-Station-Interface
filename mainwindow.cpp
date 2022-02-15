@@ -10,6 +10,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <QFile>
+#include <QtSerialPort/QSerialPort>
+#include <QSerialPortInfo>
 
 
 #define MaxTime  10
@@ -29,18 +31,69 @@ MainWindow::MainWindow(QWidget *parent)
     InitializeTelemetryTable();
     OpenCVS();
 
-
+    // update graph and table
     QTimer * timer = new QTimer;
     connect(timer, &QTimer::timeout, this, &MainWindow::AddData);
     connect(timer, &QTimer::timeout, this, &MainWindow::AddToTable);
     timer->start(1000);
 
+    // serial port
+    qDebug() << "Number of ports: " << QSerialPortInfo::availablePorts().length() << "\n";
+    foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
+    {
+        qDebug() << "Description: " << serialPortInfo.description() << "\n";
+        qDebug() << "Has vendor id?: " << serialPortInfo.hasVendorIdentifier() << "\n";
+        qDebug() << "Vendor ID: " << serialPortInfo.vendorIdentifier() << "\n";
+        qDebug() << "Has product id?: " << serialPortInfo.hasProductIdentifier() << "\n";
+        qDebug() << "Product ID: " << serialPortInfo.productIdentifier() << "\n";
+    }
 
+    bool arduino_is_available = false;
+    QString arduino_uno_port_name;
+
+    //  For each available serial port
+    foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts()){
+        //  check if the serialport has both a product identifier and a vendor identifier
+        if(serialPortInfo.hasProductIdentifier() && serialPortInfo.hasVendorIdentifier())
+        {
+            //  check if the product ID and the vendor ID match those of the arduino uno
+            if((serialPortInfo.productIdentifier() == arduino_uno_product_id)
+                    && (serialPortInfo.vendorIdentifier() == arduino_uno_vendor_id))
+            {
+                arduino_is_available = true;
+                arduino_uno_port_name = serialPortInfo.portName();
+            }
+        }
+    }
+
+    arduino = new QSerialPort(this);
+    if(arduino_is_available)
+    {
+        if(!arduino->setBaudRate(QSerialPort::Baud9600))
+            qDebug() << "error:" << arduino->errorString();
+        if(!arduino->setDataBits(QSerialPort::Data8))
+            qDebug() << "error:" << arduino->errorString();
+        if(!arduino->setParity(QSerialPort::EvenParity))
+            qDebug() << "error:" << arduino->errorString();
+        if(!arduino->setFlowControl(QSerialPort::NoFlowControl))
+            qDebug() << "error:" << arduino->errorString();
+        if(!arduino->setStopBits(QSerialPort::OneStop))
+            qDebug() << "error:" << arduino->errorString();
+        connect(arduino, &QSerialPort::readyRead, this, &MainWindow::ReadPort);
+        if(!arduino->open(QIODevice::ReadWrite))
+            qDebug() << "error:" << arduino->errorString();
+    }
+    else
+    {
+        qDebug() << "Couldn't find the correct port for the arduino.\n";
+        //QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to arduino.");
+    }
 
 }
 
 MainWindow::~MainWindow()
 {
+    arduino->close();
     delete ui;
 }
 void MainWindow::InitializeGraph()
@@ -87,7 +140,7 @@ void MainWindow::AddData()
         ui->maxVal->setText(QString::number(maxVal));
         ui->minVal->setText(QString::number(minVal));
 
-        Sleep(2000);
+        //Sleep(2000);
     }
     if(rande <= minVal)
     {
@@ -96,7 +149,7 @@ void MainWindow::AddData()
         maxVal = minVal + 25;
         ui->maxVal->setText(QString::number(maxVal));
         ui->minVal->setText(QString::number(minVal));
-        Sleep(2000);
+       // Sleep(2000);
     }
     number++;
 
@@ -136,16 +189,16 @@ void MainWindow::AddToTable()
     if(cvsFile.isOpen())
     {
 
-            QString line = QString::fromLocal8Bit(cvsFile.readLine());
-            if(line == "\n")
-              return;
-            QStringList lineSplitted = line.remove("\"").remove("\n").split(",");
-            // qDebug() << "line is" << line << lineSplitted;
-            telemetryModel->setItem(rowNumber, 0, new QStandardItem(lineSplitted.at(0)));
-            telemetryModel->setItem(rowNumber, 1, new QStandardItem(lineSplitted.at(1)));
-            telemetryModel->setItem(rowNumber, 2, new QStandardItem(lineSplitted.at(2)));
-            rowNumber++;
-            ui->telemetryTable->scrollToBottom();
+        QString line = QString::fromLocal8Bit(cvsFile.readLine());
+        if(line == "\n")
+            return;
+        QStringList lineSplitted = line.remove("\"").remove("\n").split(",");
+        // qDebug() << "line is" << line << lineSplitted;
+        telemetryModel->setItem(rowNumber, 0, new QStandardItem(lineSplitted.at(0)));
+        telemetryModel->setItem(rowNumber, 1, new QStandardItem(lineSplitted.at(1)));
+        telemetryModel->setItem(rowNumber, 2, new QStandardItem(lineSplitted.at(2)));
+        rowNumber++;
+        ui->telemetryTable->scrollToBottom();
 
     }
     else
@@ -154,3 +207,13 @@ void MainWindow::AddToTable()
     }
 }
 
+void MainWindow::ReadPort()
+{
+    QString buffer;
+    buffer.append(arduino->readAll());
+    if (buffer.size() > 62)
+    {
+        qDebug() << buffer.toUtf8();
+        buffer.remove(0,62);
+    }
+}

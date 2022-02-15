@@ -5,6 +5,7 @@
 #include <QtCharts>
 #include <QChartView>
 #include <QLineSeries>
+#include <QSerialPort>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +26,9 @@ private:
     QChart *chart;
     QStandardItemModel *telemetryModel;
     QFile cvsFile;
+    QSerialPort* arduino;
+    static const quint16 arduino_uno_vendor_id = 6790;
+    static const quint16 arduino_uno_product_id = 29987;
     int rowNumber = 1;
 
     void AddData();
@@ -32,6 +36,7 @@ private:
     void InitializeTelemetryTable();
     void OpenCVS();
     void AddToTable();
+    void ReadPort();
 
 };
 #endif // MAINWINDOW_H
