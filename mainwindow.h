@@ -6,6 +6,7 @@
 #include <QChartView>
 #include <QLineSeries>
 #include <QSerialPort>
+// qcustomplot
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

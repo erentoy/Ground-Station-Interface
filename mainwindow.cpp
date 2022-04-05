@@ -3,7 +3,6 @@
 
 #include <QtGlobal>
 #include <QRandomGenerator>
-#include <qglobal.h>
 #include <random>
 #include "QDateTime"
 #include <stdio.h>      /* printf, scanf, puts, NULL */
@@ -12,6 +11,8 @@
 #include <QFile>
 #include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
+#include <QMediaPlayer>
+#include <QVideoWidget>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -92,11 +93,29 @@ MainWindow::MainWindow(QWidget *parent)
         //QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to arduino.");
     }
 
-    // window widget
+    // player window
+
+    // open Gom player with process
+//    QProcess *process = new QProcess();
+//    process->start("D:/GOMPlayer/GOM.exe");
+
+//       if(process->waitForStarted() == false)
+//       {
+//           qDebug() << "ERROR: " << process->errorString();
+//      }
+//       else
+//       {
+//           qDebug() << "opened process";
+//       }
+
+    // open Gom player with url
+    QString link = "D:/QtProjects/Projects/try/GOMPlayer";
+    QDesktopServices::openUrl(QUrl(link));
+
 #ifdef _WIN32
-    //Sleep( 3000 );
-    qDebug() << "Windows OS";
-    WId id = (WId) FindWindow(NULL, L"WhatsApp");
+       Sleep(2000);
+       qDebug() << "Windows OS is being used ";
+       WId id = (WId) FindWindow(NULL, L"GOM Player");
 
     /*
      * Examples !!
@@ -107,12 +126,23 @@ MainWindow::MainWindow(QWidget *parent)
      *
      */
 
-    qDebug() << id << " is window id";
-    QWindow* window =  QWindow::fromWinId(id);
-    QWidget* widget = QWidget::createWindowContainer(window);
-    QDockWidget* dockWidget = new QDockWidget;
-    dockWidget->setWidget(widget);
-    this->addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+       qDebug() << id << " is window id";
+       QWindow* window =  QWindow::fromWinId(id);
+       window->setFlags(Qt::FramelessWindowHint);
+       window->create();
+       window->setVisible(true);
+       window->requestActivate();
+       QWidget* playerWidget = QWidget::createWindowContainer(window, this);
+
+       // add as a widget
+       QLayout* layout = new QVBoxLayout();
+       layout->addWidget(playerWidget);
+       this->ui->widget->setLayout(layout);
+
+       // add as a dock widget
+//       QDockWidget* dockWidget = new QDockWidget;
+//       dockWidget->setWidget(playerWidget);
+//       this->addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 
 #endif
 
@@ -144,16 +174,14 @@ void MainWindow::InitializeGraph()
     chartView->setRenderHint(QPainter::Antialiasing);
 
     //chartView->setParent(ui->horizontalFrame);
-    ui->horizontalLayout_2->addWidget(chartView);
-    ui->maxVal->setText(QString::number(maxVal));
-    ui->minVal->setText(QString::number(minVal));
+    ui->altitudeGraph->addWidget(chartView);
+
 }
 
 void MainWindow::AddData()
 {
     srand(time(NULL));
     int rande = rand() % ((100 + 1) - 0 ) + 0;
-    ui->lineEdit->setText(QString::number(rande));
     series->append(number, rande);
     if(series->count() >  MaxTime )
     {
@@ -164,8 +192,7 @@ void MainWindow::AddData()
         chart->scroll(0, ((rande) - maxVal + 10) * chart->plotArea().height() / MaxSize);
         maxVal += (rande) - maxVal + 10;
         minVal = maxVal - 25;
-        ui->maxVal->setText(QString::number(maxVal));
-        ui->minVal->setText(QString::number(minVal));
+
 
         //Sleep(2000);
     }
@@ -174,8 +201,6 @@ void MainWindow::AddData()
         chart->scroll(0, -1 * (minVal - (rande) + 10 )  * chart->plotArea().height() / MaxSize);
         minVal -= (minVal - (rande) + 10);
         maxVal = minVal + 25;
-        ui->maxVal->setText(QString::number(maxVal));
-        ui->minVal->setText(QString::number(minVal));
        // Sleep(2000);
     }
     number++;
