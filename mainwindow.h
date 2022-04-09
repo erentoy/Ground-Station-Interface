@@ -23,21 +23,26 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QLineSeries *series;
-    QChart *chart;
+
+    QLineSeries *altitudeSeries;
+    QChart *altitudeChart;
+
     QStandardItemModel *telemetryModel;
     QFile cvsFile;
     QSerialPort* arduino;
+
     static const quint16 arduino_uno_vendor_id = 6790;
     static const quint16 arduino_uno_product_id = 29987;
     int rowNumber = 1;
 
     void AddData();
-    void InitializeGraph();
+    void InitializeAltitudeGraph();
     void InitializeTelemetryTable();
     void OpenCVS();
     void AddToTable();
     void ReadPort();
-
+    void CreateStateTable();
+    void ConnectSerialPort();
+    void CreateVideoPlayer();
 };
 #endif // MAINWINDOW_H

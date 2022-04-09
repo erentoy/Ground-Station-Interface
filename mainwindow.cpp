@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 
 #include <QtGlobal>
+#include <QtCharts>
 #include <QRandomGenerator>
 #include <random>
-#include "QDateTime"
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
@@ -13,6 +13,9 @@
 #include <QSerialPortInfo>
 #include <QMediaPlayer>
 #include <QVideoWidget>
+#include <QPixmap>
+#include <QPalette>
+#include <QAbstractItemView>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -31,16 +34,215 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-    InitializeGraph();
+    ui->turksatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/tLogo.png").scaled(ui->turksatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->opsatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/dik.png").scaled(ui->opsatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->simulation->setPixmap(QPixmap("D:/Projects/Interface/resources/sat.jfif").scaled(ui->simulation->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+    CreateVideoPlayer();
+    InitializeAltitudeGraph();
     InitializeTelemetryTable();
+    CreateStateTable();
     OpenCVS();
 
     // update graph and table
     QTimer * timer = new QTimer;
-    connect(timer, &QTimer::timeout, this, &MainWindow::AddData);
-    connect(timer, &QTimer::timeout, this, &MainWindow::AddToTable);
+    //connect(timer, &QTimer::timeout, this, &MainWindow::AddData);
+    //connect(timer, &QTimer::timeout, this, &MainWindow::AddToTable);
     timer->start(1000);
 
+
+
+}
+
+MainWindow::~MainWindow()
+{
+    arduino->close();
+    delete ui;
+}
+void MainWindow::InitializeAltitudeGraph()
+{
+    altitudeSeries = new QLineSeries();
+    altitudeSeries->append(0,0);
+
+    altitudeChart = new QChart();
+    altitudeChart->addSeries(altitudeSeries);
+    altitudeChart->setTitle("Altitude");
+    altitudeChart->createDefaultAxes();
+    altitudeChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    altitudeChart->axes(Qt::Vertical).first()->setRange(0, MaxSize);
+    altitudeChart->legend()->setVisible(true);
+    altitudeChart->legend()->hide();
+    altitudeChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    altitudeChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+    //! 2 yol var (grafikler için)
+    //! 1. arayzüde qchartview oluştur hepsi için sonra içine ataaa
+    //! 2. tab alanı oluştur widgetin layoutuna ekleme yap diğer graflari
+
+    // 1. yontem
+    // ui->graphicsView->setChart(altitudeChart);
+
+    // 2. yontem
+    QChartView *chartView = new QChartView(altitudeChart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    QGridLayout* graphsLayout = new QGridLayout();
+    graphsLayout->addWidget(chartView);
+    qDebug() <<ui->graphicsTabWidget->widget(0)->objectName();
+    ui->graphicsTabWidget->widget(0)->setLayout(graphsLayout);
+    //ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView);
+
+}
+
+void MainWindow::AddData()
+{
+    srand(time(NULL));
+    int rande = rand() % ((100 + 1) - 0 ) + 0;
+    altitudeSeries->append(number, rande);
+    if(altitudeSeries->count() >  MaxTime )
+    {
+        altitudeChart->scroll(altitudeChart->plotArea().width() / MaxTime, 0);
+    }
+    if(rande >= maxVal)
+    {// büyüklüğe göre kaydırmalıyız
+        altitudeChart->scroll(0, ((rande) - maxVal + 10) * altitudeChart->plotArea().height() / MaxSize);
+        maxVal += (rande) - maxVal + 10;
+        minVal = maxVal - 25;
+
+
+        //Sleep(2000);
+    }
+    if(rande <= minVal)
+    {
+        altitudeChart->scroll(0, -1 * (minVal - (rande) + 10 )  * altitudeChart->plotArea().height() / MaxSize);
+        minVal -= (minVal - (rande) + 10);
+        maxVal = minVal + 25;
+       // Sleep(2000);
+    }
+    number++;
+
+
+}
+
+void MainWindow::InitializeTelemetryTable()
+{
+    telemetryModel = new QStandardItemModel(); //2 Rows and 3 Columns
+
+    telemetryModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Takım\n No")));
+    telemetryModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Paket\n No")));
+    telemetryModel->setHorizontalHeaderItem(2, new QStandardItem(QString("Gönderim\n Saati")));
+
+    telemetryModel->setHorizontalHeaderItem(3, new QStandardItem(QString("Görev Yükü\n Basınç")));
+    telemetryModel->setHorizontalHeaderItem(4, new QStandardItem(QString("Taşıyıcı\n Basınç")));
+    telemetryModel->setHorizontalHeaderItem(5, new QStandardItem(QString("Görev Yükü\n Yükseklik")));
+    telemetryModel->setHorizontalHeaderItem(6, new QStandardItem(QString("Taşıyıcı\n Yükseklik")));
+    telemetryModel->setHorizontalHeaderItem(7, new QStandardItem(QString("İrtifa\n Farkı")));
+    telemetryModel->setHorizontalHeaderItem(8, new QStandardItem(QString("İniş\n Hızı")));
+    telemetryModel->setHorizontalHeaderItem(9, new QStandardItem(QString("Sıcaklık")));
+
+    telemetryModel->setHorizontalHeaderItem(10, new QStandardItem(QString("Görev Yükü\n Latitude")));
+    telemetryModel->setHorizontalHeaderItem(11, new QStandardItem(QString("Görev Yükü\n Longitude")));
+    telemetryModel->setHorizontalHeaderItem(12, new QStandardItem(QString("Görev Yükü\n Altitude")));
+    telemetryModel->setHorizontalHeaderItem(13, new QStandardItem(QString("Taşıyıcı\n Latitude")));
+    telemetryModel->setHorizontalHeaderItem(14, new QStandardItem(QString("Taşıyıcı\n Longitude")));
+    telemetryModel->setHorizontalHeaderItem(15, new QStandardItem(QString("Taşıyıcı\n Altitude")));
+
+    telemetryModel->setHorizontalHeaderItem(16, new QStandardItem(QString("Uydu  \nDurumu")));
+    telemetryModel->setHorizontalHeaderItem(17, new QStandardItem(QString("Pitch")));
+    telemetryModel->setHorizontalHeaderItem(18, new QStandardItem(QString("Roll")));
+    telemetryModel->setHorizontalHeaderItem(19, new QStandardItem(QString("Yaw")));
+
+    telemetryModel->setHorizontalHeaderItem(20, new QStandardItem(QString("Dönüş \n Sayısı")));
+    telemetryModel->setHorizontalHeaderItem(21, new QStandardItem(QString("Video Aktarım\nBilgisi")));
+
+
+    ui->telemetryTable->setModel(telemetryModel);
+    for(int  i = 0; i < telemetryModel->columnCount(); i++)
+    {
+      int length = telemetryModel->horizontalHeaderItem(i)->text().split("\n").first().size();
+      ui->telemetryTable->setColumnWidth(i, length * 11);
+    }
+
+}
+
+void MainWindow::OpenCVS()
+{
+    cvsFile.setFileName("D:/deniro.csv");
+    if(false == cvsFile.open((QIODevice::ReadOnly)))
+    {
+        qDebug() << cvsFile.errorString();
+        return;
+    }
+    qDebug() << "File is opened!!";
+    cvsFile.readLine();
+    return;
+
+}
+
+void MainWindow::AddToTable()
+{
+    if(cvsFile.isOpen())
+    {
+
+        QString line = QString::fromLocal8Bit(cvsFile.readLine());
+        if(line == "\n")
+            return;
+        QStringList lineSplitted = line.remove("\"").remove("\n").split(",");
+        // qDebug() << "line is" << line << lineSplitted;
+        telemetryModel->setItem(rowNumber, 0, new QStandardItem(lineSplitted.at(0)));
+        telemetryModel->setItem(rowNumber, 1, new QStandardItem(lineSplitted.at(1)));
+        telemetryModel->setItem(rowNumber, 2, new QStandardItem(lineSplitted.at(2)));
+        rowNumber++;
+        ui->telemetryTable->scrollToBottom();
+
+    }
+    else
+    {
+        qDebug() << "not added to table!!";
+    }
+}
+
+void MainWindow::ReadPort()
+{
+    QString buffer;
+    buffer.append(arduino->readAll());
+    if (buffer.size() > 62)
+    {
+        qDebug() << buffer.toUtf8();
+        buffer.remove(0,62);
+    }
+}
+
+void MainWindow::CreateStateTable()
+{
+    QStandardItemModel* stateModel = new QStandardItemModel();
+    stateModel->appendRow(new QStandardItem("Pre-Launch"));
+    stateModel->appendRow(new QStandardItem("Launch"));
+    stateModel->appendRow(new QStandardItem("Satellite Released"));
+    stateModel->appendRow(new QStandardItem("Payload Released"));
+    stateModel->appendRow(new QStandardItem("Landed"));
+
+    this->ui->stateList->setModel(stateModel);
+    this->ui->stateList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setStyleSheet("QListView { background-color: red }");
+
+    this->ui->stateList->setCurrentIndex(stateModel->indexFromItem(stateModel->item(3)));
+
+    // color for already done
+    QModelIndex vIndex = stateModel->index(0, 0);
+    QMap<int, QVariant> vMap = stateModel->itemData(vIndex);
+    vMap.insert(Qt::ForegroundRole, QVariant(QBrush(Qt::darkGray)));
+    stateModel->setItemData(vIndex, vMap);
+
+    // color for up-coming states
+    QModelIndex vIndex1 = stateModel->index(1, 0);
+    QMap<int, QVariant> vMap1 = stateModel->itemData(vIndex1);
+    vMap1.insert(Qt::ForegroundRole, QVariant(QBrush(Qt::black)));
+    stateModel->setItemData(vIndex1, vMap1);
+}
+
+void MainWindow::ConnectSerialPort()
+{
     // serial port
     qDebug() << "Number of ports: " << QSerialPortInfo::availablePorts().length() << "\n";
     foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
@@ -92,6 +294,10 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Couldn't find the correct port for the arduino.\n";
         //QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to arduino.");
     }
+}
+
+void MainWindow::CreateVideoPlayer()
+{
 
     // player window
 
@@ -146,126 +352,4 @@ MainWindow::MainWindow(QWidget *parent)
 
 #endif
 
-}
-
-MainWindow::~MainWindow()
-{
-    arduino->close();
-    delete ui;
-}
-void MainWindow::InitializeGraph()
-{
-    series = new QLineSeries();
-    series->append(0,0);
-
-    chart = new QChart();
-    chart->addSeries(series);
-    chart->setTitle("Altitude");
-    chart->createDefaultAxes();
-    chart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
-    chart->axes(Qt::Vertical).first()->setRange(0, MaxSize);
-    chart->legend()->setVisible(true);
-    chart->legend()->hide();
-    chart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
-    chart->setTheme(QChart::ChartThemeBlueCerulean);
-
-    QChartView *chartView = new QChartView(chart);
-
-    chartView->setRenderHint(QPainter::Antialiasing);
-
-    //chartView->setParent(ui->horizontalFrame);
-    ui->altitudeGraph->addWidget(chartView);
-
-}
-
-void MainWindow::AddData()
-{
-    srand(time(NULL));
-    int rande = rand() % ((100 + 1) - 0 ) + 0;
-    series->append(number, rande);
-    if(series->count() >  MaxTime )
-    {
-        chart->scroll(chart->plotArea().width() / MaxTime, 0);
-    }
-    if(rande >= maxVal)
-    {// büyüklüğe göre kaydırmalıyız
-        chart->scroll(0, ((rande) - maxVal + 10) * chart->plotArea().height() / MaxSize);
-        maxVal += (rande) - maxVal + 10;
-        minVal = maxVal - 25;
-
-
-        //Sleep(2000);
-    }
-    if(rande <= minVal)
-    {
-        chart->scroll(0, -1 * (minVal - (rande) + 10 )  * chart->plotArea().height() / MaxSize);
-        minVal -= (minVal - (rande) + 10);
-        maxVal = minVal + 25;
-       // Sleep(2000);
-    }
-    number++;
-
-
-}
-
-void MainWindow::InitializeTelemetryTable()
-{
-    telemetryModel = new QStandardItemModel(); //2 Rows and 3 Columns
-
-    telemetryModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Year")));
-    telemetryModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Score")));
-    telemetryModel->setHorizontalHeaderItem(2, new QStandardItem(QString("Title")));
-
-
-    ui->telemetryTable->setModel(telemetryModel);
-    ui->telemetryTable->setColumnWidth(2, 225);
-
-}
-
-void MainWindow::OpenCVS()
-{
-    cvsFile.setFileName("D:/deniro.csv");
-    if(false == cvsFile.open((QIODevice::ReadOnly)))
-    {
-        qDebug() << cvsFile.errorString();
-        return;
-    }
-    qDebug() << "File is opened!!";
-    cvsFile.readLine();
-    return;
-
-}
-
-void MainWindow::AddToTable()
-{
-    if(cvsFile.isOpen())
-    {
-
-        QString line = QString::fromLocal8Bit(cvsFile.readLine());
-        if(line == "\n")
-            return;
-        QStringList lineSplitted = line.remove("\"").remove("\n").split(",");
-        // qDebug() << "line is" << line << lineSplitted;
-        telemetryModel->setItem(rowNumber, 0, new QStandardItem(lineSplitted.at(0)));
-        telemetryModel->setItem(rowNumber, 1, new QStandardItem(lineSplitted.at(1)));
-        telemetryModel->setItem(rowNumber, 2, new QStandardItem(lineSplitted.at(2)));
-        rowNumber++;
-        ui->telemetryTable->scrollToBottom();
-
-    }
-    else
-    {
-        qDebug() << "not added to table!!";
-    }
-}
-
-void MainWindow::ReadPort()
-{
-    QString buffer;
-    buffer.append(arduino->readAll());
-    if (buffer.size() > 62)
-    {
-        qDebug() << buffer.toUtf8();
-        buffer.remove(0,62);
-    }
 }
