@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
     a.setWindowIcon(QIcon("D:/Projects/Interface/resources/dik.png"));
     w.setWindowFlags(Qt::Window |Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowMinimizeButtonHint);
     w.setWindowState(Qt::WindowMaximized);
+    w.setWindowTitle(" OPSAT Ground Station");
     w.show/*FullScreen*/();
     return a.exec();
 }

@@ -16,6 +16,7 @@
 #include <QPixmap>
 #include <QPalette>
 #include <QAbstractItemView>
+#include <QBoxLayout>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -36,12 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->turksatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/tLogo.png").scaled(ui->turksatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     ui->opsatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/dik.png").scaled(ui->opsatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    ui->simulation->setPixmap(QPixmap("D:/Projects/Interface/resources/sat.jfif").scaled(ui->simulation->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    ui->simulation->setPixmap(QPixmap("D:/Projects/Interface/resources/genel2.jpeg").scaled(ui->simulation->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     CreateVideoPlayer();
-    InitializeAltitudeGraph();
     InitializeTelemetryTable();
     CreateStateTable();
+    InitializeAltitudeGraph();
     OpenCVS();
 
     // update graph and table
@@ -62,14 +63,13 @@ MainWindow::~MainWindow()
 void MainWindow::InitializeAltitudeGraph()
 {
     altitudeSeries = new QLineSeries();
-    altitudeSeries->append(0,0);
 
     altitudeChart = new QChart();
     altitudeChart->addSeries(altitudeSeries);
-    altitudeChart->setTitle("Altitude");
+    altitudeChart->setTitle("GPS Altitude (deg)");
     altitudeChart->createDefaultAxes();
     altitudeChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
-    altitudeChart->axes(Qt::Vertical).first()->setRange(0, MaxSize);
+    altitudeChart->axes(Qt::Vertical).first()->setRange(840, 900);
     altitudeChart->legend()->setVisible(true);
     altitudeChart->legend()->hide();
     altitudeChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
@@ -87,11 +87,213 @@ void MainWindow::InitializeAltitudeGraph()
     chartView->setRenderHint(QPainter::Antialiasing);
 
     QGridLayout* graphsLayout = new QGridLayout();
-    graphsLayout->addWidget(chartView);
+    graphsLayout->addWidget(chartView, 1, 0); // insertwidget
     qDebug() <<ui->graphicsTabWidget->widget(0)->objectName();
-    ui->graphicsTabWidget->widget(0)->setLayout(graphsLayout);
+    ui->graphicsTabWidget->widget(1)->setLayout(graphsLayout);
     //ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView);
 
+    // lets add other graphs
+    //2
+    QLineSeries *laltitudeSeries = new QLineSeries();
+    QChart *laltitudeChart = new QChart();
+    laltitudeChart->addSeries(laltitudeSeries);
+    laltitudeChart->setTitle("GPS Latitude (m)");
+    laltitudeChart->createDefaultAxes();
+    laltitudeChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    laltitudeChart->axes(Qt::Vertical).first()->setRange(200, 320);
+    laltitudeChart->legend()->setVisible(true);
+    laltitudeChart->legend()->hide();
+    laltitudeChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    laltitudeChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+    QChartView *chartView2 = new QChartView(laltitudeChart);
+    chartView2->setRenderHint(QPainter::Antialiasing);
+    graphsLayout->addWidget(chartView2, 1, 1);
+
+    //3
+    QLineSeries *longitudeSeries = new QLineSeries();
+    QChart *longitudeChart = new QChart();
+    longitudeChart->addSeries(longitudeSeries);
+    longitudeChart->setTitle("GPS Longitude (deg)");
+    longitudeChart->createDefaultAxes();
+    longitudeChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    longitudeChart->axes(Qt::Vertical).first()->setRange(50, 55);
+    longitudeChart->legend()->setVisible(true);
+    longitudeChart->legend()->hide();
+    longitudeChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    longitudeChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+    QChartView *chartView6 = new QChartView(longitudeChart);
+    chartView6->setRenderHint(QPainter::Antialiasing);
+    graphsLayout->addWidget(chartView6, 1,2);
+
+
+    // 4
+    QLineSeries *pressureSeries = new QLineSeries();
+    QChart *pressureChart = new QChart();
+    pressureChart->addSeries(pressureSeries);
+    pressureChart->setTitle("Pressure (Pa)");
+    pressureChart->createDefaultAxes();
+    pressureChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    pressureChart->axes(Qt::Vertical).first()->setRange(6, 10);
+    pressureChart->legend()->setVisible(true);
+    pressureChart->legend()->hide();
+    pressureChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    pressureChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+    QChartView *chartView3 = new QChartView(pressureChart);
+    chartView3->setRenderHint(QPainter::Antialiasing);
+    graphsLayout->addWidget(chartView3, 2, 0);
+
+    // 5
+    QLineSeries *temperatureSeries = new QLineSeries();
+    QChart *temperatureChart = new QChart();
+    temperatureChart->addSeries(temperatureSeries);
+    temperatureChart->setTitle("Temperature (°C) ");
+    temperatureChart->createDefaultAxes();
+    temperatureChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    temperatureChart->axes(Qt::Vertical).first()->setRange(15, 25);
+    temperatureChart->legend()->setVisible(true);
+    temperatureChart->legend()->hide();
+    temperatureChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    temperatureChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+//    QChartView *chartView4 = new QChartView(pressureChart);
+//    chartView4->setRenderHint(QPainter::Antialiasing);
+//    ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView4);
+     ui->temperatureGraph->setChart(temperatureChart);
+
+    // 6
+    QLineSeries *voltageSeries = new QLineSeries();
+    QChart *voltageChart = new QChart();
+    voltageChart->addSeries(voltageSeries);
+    voltageChart->setTitle("Voltage (V)");
+    voltageChart->createDefaultAxes();
+    voltageChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    voltageChart->axes(Qt::Vertical).first()->setRange(6, 11);
+    voltageChart->legend()->setVisible(true);
+    voltageChart->legend()->hide();
+    voltageChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    voltageChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+//    QChartView *chartView5 = new QChartView(pressureChart);
+//    chartView5->setRenderHint(QPainter::Antialiasing);
+//    ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView5);
+
+    ui->voltageGraph->setChart(voltageChart);
+
+    // 7
+    QLineSeries *altDifSeries = new QLineSeries();
+    QChart *altDifChart = new QChart();
+    altDifChart->addSeries(altDifSeries);
+    altDifChart->setTitle("Altitude Difference (m)");
+    altDifChart->createDefaultAxes();
+    altDifChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    altDifChart->axes(Qt::Vertical).first()->setRange(0, 35);
+    altDifChart->legend()->setVisible(true);
+    altDifChart->legend()->hide();
+    altDifChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    altDifChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+//    QChartView *chartView7 = new QChartView(pressureChart);
+//    chartView7->setRenderHint(QPainter::Antialiasing);
+//    ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView7);
+
+    ui->distanceGraph->setChart(altDifChart);
+
+    // 8
+    QLineSeries *speedSeries = new QLineSeries();
+    QChart *speedChart = new QChart();
+    speedChart->addSeries(speedSeries);
+    speedChart->setTitle("Speed (m/s)");
+    speedChart->createDefaultAxes();
+    speedChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    speedChart->axes(Qt::Vertical).first()->setRange(5, 15);
+    speedChart->legend()->setVisible(true);
+    speedChart->legend()->hide();
+    speedChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    speedChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+//    QChartView *chartView8 = new QChartView(speedChart);
+//    chartView8->setRenderHint(QPainter::Antialiasing);
+//    ui->graphicsTabWidget->widget(0)->layout()->addWidget(chartView8);
+
+    ui->speedGraph->setChart(speedChart);
+
+    //9
+    QLineSeries *RaltitudeSeries = new QLineSeries();
+    QChart *RaltitudeChart = new QChart();
+    RaltitudeChart->addSeries(RaltitudeSeries);
+    RaltitudeChart->setTitle("Altitude (m)");
+    RaltitudeChart->createDefaultAxes();
+    RaltitudeChart->axes(Qt::Horizontal).first()->setRange(0, MaxTime);
+    RaltitudeChart->axes(Qt::Vertical).first()->setRange(500, 700);
+    RaltitudeChart->legend()->setVisible(true);
+    RaltitudeChart->legend()->hide();
+    RaltitudeChart->setAnimationOptions(QChart::SeriesAnimations);//AllAnimations SeriesAnimations
+    RaltitudeChart->setTheme(QChart::ChartThemeBlueCerulean);
+
+    QChartView *chartView9 = new QChartView(RaltitudeChart);
+    chartView9->setRenderHint(QPainter::Antialiasing);
+    graphsLayout->addWidget(chartView9, 2, 1);
+
+
+  //  graphsLayout->addWidget(new QSpacerItem(10, 5), 2, 3);
+
+    QFile telemtryFile;
+    telemtryFile.setFileName("D:/Projects/Interface/resources/tele.txt");
+    if(false == telemtryFile.open((QIODevice::ReadOnly)))
+    {
+        qDebug()  << "rere "<< telemtryFile.errorString();
+        return;
+    }
+
+    qDebug() << "telemetry file is opened!!";
+    int index = 0;
+    while(telemtryFile.atEnd() == false)
+    {
+        QString currLine = telemtryFile.readLine();
+        QStringList splitted = currLine.split(",");
+
+        QList<QStandardItem*> modelList;
+        for(int i = 0; i < splitted.size(); i++)
+        {
+            modelList << new QStandardItem(QString(splitted.at(i)).remove("\r\n"));
+            switch(i)
+            {
+            case 3:
+                pressureSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 5:
+                RaltitudeSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 7:
+                altDifSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 8:
+                speedSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 9:
+                temperatureSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 10:
+                voltageSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 11:
+                laltitudeSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 12:
+                longitudeSeries->append(index, splitted.at(i).toDouble());
+                break;
+            case 13:
+                altitudeSeries->append(index, splitted.at(i).toDouble());
+                break;
+
+            }
+        }
+        telemetryModel->insertRow(index++, modelList);
+
+    }
 }
 
 void MainWindow::AddData()
@@ -139,21 +341,22 @@ void MainWindow::InitializeTelemetryTable()
     telemetryModel->setHorizontalHeaderItem(7, new QStandardItem(QString("İrtifa\n Farkı")));
     telemetryModel->setHorizontalHeaderItem(8, new QStandardItem(QString("İniş\n Hızı")));
     telemetryModel->setHorizontalHeaderItem(9, new QStandardItem(QString("Sıcaklık")));
+    telemetryModel->setHorizontalHeaderItem(10, new QStandardItem(QString("Pil\n Gerilimi")));
 
-    telemetryModel->setHorizontalHeaderItem(10, new QStandardItem(QString("Görev Yükü\n Latitude")));
-    telemetryModel->setHorizontalHeaderItem(11, new QStandardItem(QString("Görev Yükü\n Longitude")));
-    telemetryModel->setHorizontalHeaderItem(12, new QStandardItem(QString("Görev Yükü\n Altitude")));
-    telemetryModel->setHorizontalHeaderItem(13, new QStandardItem(QString("Taşıyıcı\n Latitude")));
-    telemetryModel->setHorizontalHeaderItem(14, new QStandardItem(QString("Taşıyıcı\n Longitude")));
-    telemetryModel->setHorizontalHeaderItem(15, new QStandardItem(QString("Taşıyıcı\n Altitude")));
+    telemetryModel->setHorizontalHeaderItem(11, new QStandardItem(QString("Görev Yükü\n Latitude")));
+    telemetryModel->setHorizontalHeaderItem(12, new QStandardItem(QString("Görev Yükü\n Longitude")));
+    telemetryModel->setHorizontalHeaderItem(13, new QStandardItem(QString("Görev Yükü\n Altitude")));
+    telemetryModel->setHorizontalHeaderItem(14, new QStandardItem(QString("Taşıyıcı\n Latitude")));
+    telemetryModel->setHorizontalHeaderItem(15, new QStandardItem(QString("Taşıyıcı\n Longitude")));
+    telemetryModel->setHorizontalHeaderItem(16, new QStandardItem(QString("Taşıyıcı\n Altitude")));
 
-    telemetryModel->setHorizontalHeaderItem(16, new QStandardItem(QString("Uydu  \nDurumu")));
-    telemetryModel->setHorizontalHeaderItem(17, new QStandardItem(QString("Pitch")));
-    telemetryModel->setHorizontalHeaderItem(18, new QStandardItem(QString("Roll")));
-    telemetryModel->setHorizontalHeaderItem(19, new QStandardItem(QString("Yaw")));
+    telemetryModel->setHorizontalHeaderItem(17, new QStandardItem(QString("Uydu  \nDurumu")));
+    telemetryModel->setHorizontalHeaderItem(18, new QStandardItem(QString("Pitch")));
+    telemetryModel->setHorizontalHeaderItem(19, new QStandardItem(QString("Roll")));
+    telemetryModel->setHorizontalHeaderItem(20, new QStandardItem(QString("Yaw")));
 
-    telemetryModel->setHorizontalHeaderItem(20, new QStandardItem(QString("Dönüş \n Sayısı")));
-    telemetryModel->setHorizontalHeaderItem(21, new QStandardItem(QString("Video Aktarım\nBilgisi")));
+    telemetryModel->setHorizontalHeaderItem(21, new QStandardItem(QString("Dönüş \n Sayısı")));
+    telemetryModel->setHorizontalHeaderItem(22, new QStandardItem(QString("Video Aktarım\nBilgisi")));
 
 
     ui->telemetryTable->setModel(telemetryModel);
@@ -162,6 +365,7 @@ void MainWindow::InitializeTelemetryTable()
       int length = telemetryModel->horizontalHeaderItem(i)->text().split("\n").first().size();
       ui->telemetryTable->setColumnWidth(i, length * 11);
     }
+
 
 }
 
@@ -224,9 +428,9 @@ void MainWindow::CreateStateTable()
 
     this->ui->stateList->setModel(stateModel);
     this->ui->stateList->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setStyleSheet("QListView { background-color: red }");
+    setStyleSheet("QListView { background-color: orange }");
 
-    this->ui->stateList->setCurrentIndex(stateModel->indexFromItem(stateModel->item(3)));
+    this->ui->stateList->setCurrentIndex(stateModel->indexFromItem(stateModel->item(1)));
 
     // color for already done
     QModelIndex vIndex = stateModel->index(0, 0);
@@ -315,13 +519,14 @@ void MainWindow::CreateVideoPlayer()
 //       }
 
     // open Gom player with url
-    QString link = "D:/QtProjects/Projects/try/GOMPlayer";
+   // QString link = "D:/QtProjects/Projects/try/GOMPlayer";
+    QString link = "D:/Projects/Interface/vlc";
     QDesktopServices::openUrl(QUrl(link));
 
 #ifdef _WIN32
        Sleep(2000);
        qDebug() << "Windows OS is being used ";
-       WId id = (WId) FindWindow(NULL, L"GOM Player");
+       WId id = (WId) FindWindow(NULL, L"VLC Ortam Oynatıcısı");
 
     /*
      * Examples !!

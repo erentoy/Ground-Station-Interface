@@ -610,10 +610,10 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>1500</x>
-      <y>180</y>
+      <x>1490</x>
+      <y>110</y>
       <width>391</width>
-      <height>301</height>
+      <height>281</height>
      </rect>
     </property>
    </widget>
@@ -646,8 +646,8 @@
    <widget class="QLabel" name="opsatText">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>20</y>
+      <x>670</x>
+      <y>10</y>
       <width>621</width>
       <height>61</height>
      </rect>
@@ -1255,46 +1255,20 @@
    <widget class="QLabel" name="simulation">
     <property name="geometry">
      <rect>
-      <x>1560</x>
-      <y>500</y>
-      <width>281</width>
-      <height>201</height>
+      <x>1550</x>
+      <y>410</y>
+      <width>301</width>
+      <height>331</height>
      </rect>
     </property>
     <property name="text">
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>1640</x>
-      <y>710</y>
-      <width>161</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Position Simulation</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>1280</x>
-      <y>60</y>
-      <width>81</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>State:</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>700</x>
       <y>140</y>
       <width>301</width>
       <height>51</height>
@@ -1327,8 +1301,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>100</y>
+      <x>660</x>
+      <y>80</y>
       <width>381</width>
       <height>41</height>
      </rect>
@@ -1399,7 +1373,7 @@
         </font>
        </property>
        <property name="text">
-        <string>sdfsdfsdfsdfs </string>
+        <string>D:/Documents/video.mp4</string>
        </property>
        <property name="frame">
         <bool>true</bool>
@@ -1428,9 +1402,9 @@
    <widget class="QListView" name="stateList">
     <property name="geometry">
      <rect>
-      <x>1350</x>
-      <y>20</y>
-      <width>251</width>
+      <x>1100</x>
+      <y>80</y>
+      <width>221</width>
       <height>121</height>
      </rect>
     </property>
@@ -1457,7 +1431,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>COM PORT:</string>
+        <string>Telemetri Com Port:</string>
        </property>
       </widget>
      </item>
@@ -1509,19 +1483,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
     </layout>
    </widget>
    <widget class="QTabWidget" name="graphicsTabWidget">
@@ -1530,15 +1491,201 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>210</y>
-      <width>801</width>
-      <height>511</height>
+      <x>60</x>
+      <y>220</y>
+      <width>1411</width>
+      <height>531</height>
      </rect>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <widget class="QWidget" name="generalTab">
+     <attribute name="title">
+      <string>General</string>
+     </attribute>
+     <widget class="QChartView" name="speedGraph">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>301</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QChartView" name="temperatureGraph">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>20</y>
+        <width>301</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QChartView" name="voltageGraph">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>20</y>
+        <width>301</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QChartView" name="distanceGraph">
+      <property name="geometry">
+       <rect>
+        <x>1050</x>
+        <y>20</y>
+        <width>301</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>320</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pitch</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>320</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Roll</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>320</y>
+        <width>63</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Yaw</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>320</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Spin Count </string>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="minLcd_4">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>380</y>
+        <width>63</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="digitCount">
+       <number>2</number>
+      </property>
+      <property name="intValue" stdset="0">
+       <number>24</number>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="minLcd_3">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>380</y>
+        <width>63</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="digitCount">
+       <number>2</number>
+      </property>
+      <property name="intValue" stdset="0">
+       <number>2</number>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="minLcd_2">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>380</y>
+        <width>63</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="digitCount">
+       <number>3</number>
+      </property>
+      <property name="intValue" stdset="0">
+       <number>140</number>
+      </property>
+     </widget>
+     <widget class="QLCDNumber" name="minLcd_5">
+      <property name="geometry">
+       <rect>
+        <x>770</x>
+        <y>370</y>
+        <width>63</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="digitCount">
+       <number>2</number>
+      </property>
+      <property name="intValue" stdset="0">
+       <number>1</number>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="geometry">
+       <rect>
+        <x>1050</x>
+        <y>330</y>
+        <width>241</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Video Transfer Finished</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="payloadTAb">
      <attribute name="title">
       <string>Payload</string>
@@ -1549,6 +1696,82 @@
       <string>Container</string>
      </attribute>
     </widget>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>136</y>
+      <width>401</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Video Com Port:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>28</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Select Port</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>COM1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>COM2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>COM3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>COM4</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1563,6 +1786,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header>QtCharts</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
