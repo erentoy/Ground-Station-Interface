@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     CreateStateTable();
     InitializeAltitudeGraph();
     OpenCVS();
+    ConnectSerialPort();
 
     // update graph and table
     QTimer * timer = new QTimer;
@@ -408,13 +409,16 @@ void MainWindow::AddToTable()
 
 void MainWindow::ReadPort()
 {
-    QString buffer;
-    buffer.append(arduino->readAll());
-    if (buffer.size() > 62)
-    {
-        qDebug() << buffer.toUtf8();
-        buffer.remove(0,62);
-    }
+//    QString buffer;
+//    buffer.append(arduino->readAll());
+//    if (buffer.size() > 62)
+//    {
+//        qDebug() << buffer.toUtf8();
+//        buffer.remove(0,62);
+//    }
+
+    //qDebug() << arduino->readAll().toUtf8();
+    qDebug() << arduino->readAll();
 }
 
 void MainWindow::CreateStateTable()
@@ -472,6 +476,7 @@ void MainWindow::ConnectSerialPort()
             {
                 arduino_is_available = true;
                 arduino_uno_port_name = serialPortInfo.portName();
+                qDebug() << "bulduuuuu!!";
             }
         }
     }
@@ -479,6 +484,7 @@ void MainWindow::ConnectSerialPort()
     arduino = new QSerialPort(this);
     if(arduino_is_available)
     {
+        arduino->setPortName(arduino_uno_port_name);
         if(!arduino->setBaudRate(QSerialPort::Baud9600))
             qDebug() << "error:" << arduino->errorString();
         if(!arduino->setDataBits(QSerialPort::Data8))
@@ -491,7 +497,7 @@ void MainWindow::ConnectSerialPort()
             qDebug() << "error:" << arduino->errorString();
         connect(arduino, &QSerialPort::readyRead, this, &MainWindow::ReadPort);
         if(!arduino->open(QIODevice::ReadWrite))
-            qDebug() << "error:" << arduino->errorString();
+            qDebug() << "error:a" << arduino->errorString();
     }
     else
     {
@@ -522,9 +528,9 @@ void MainWindow::CreateVideoPlayer()
    // QString link = "D:/QtProjects/Projects/try/GOMPlayer";
     QString link = "D:/Projects/Interface/vlc";
     QDesktopServices::openUrl(QUrl(link));
+    Sleep(2000);
 
 #ifdef _WIN32
-       Sleep(2000);
        qDebug() << "Windows OS is being used ";
        WId id = (WId) FindWindow(NULL, L"VLC Ortam Oynatıcısı");
 
@@ -539,16 +545,15 @@ void MainWindow::CreateVideoPlayer()
 
        qDebug() << id << " is window id";
        QWindow* window =  QWindow::fromWinId(id);
-       window->setFlags(Qt::FramelessWindowHint);
-       window->create();
-       window->setVisible(true);
-       window->requestActivate();
+
        QWidget* playerWidget = QWidget::createWindowContainer(window, this);
 
        // add as a widget
        QLayout* layout = new QVBoxLayout();
        layout->addWidget(playerWidget);
-       this->ui->widget->setLayout(layout);
+      // this->ui->widget->setLayout(layout);
+      this->ui->widget->setLayout(layout);
+
 
        // add as a dock widget
 //       QDockWidget* dockWidget = new QDockWidget;
