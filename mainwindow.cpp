@@ -17,6 +17,8 @@
 #include <QPalette>
 #include <QAbstractItemView>
 #include <QBoxLayout>
+#include <QString>
+#include <iostream>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -37,12 +39,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->turksatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/tLogo.png").scaled(ui->turksatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     ui->opsatLogo->setPixmap(QPixmap("D:/Projects/Interface/resources/dik.png").scaled(ui->opsatLogo->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    ui->simulation->setPixmap(QPixmap("D:/Projects/Interface/resources/genel2.jpeg").scaled(ui->simulation->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     CreateVideoPlayer();
     InitializeTelemetryTable();
     CreateStateTable();
     InitializeAltitudeGraph();
+    InitializeSimulation();
     OpenCVS();
     ConnectSerialPort();
 
@@ -370,6 +372,85 @@ void MainWindow::InitializeTelemetryTable()
 
 }
 
+void MainWindow::InitializeSimulation()
+{
+    Qt3DExtras::Qt3DWindow *view = new Qt3DExtras::Qt3DWindow();
+    view->defaultFrameGraph()->setClearColor(QColor(Qt::white));
+    QWidget *container = QWidget::createWindowContainer(view);
+    QVBoxLayout * vLayout  = new QVBoxLayout();
+    vLayout->addWidget(container);
+    ui->simArea->setLayout(vLayout);
+
+    Qt3DInput::QInputAspect *input = new Qt3DInput::QInputAspect;
+    view->registerAspect(input);
+
+    // Root entity
+    Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
+
+    // Camera
+    Qt3DRender::QCamera *cameraEntity = view->camera();
+
+    cameraEntity->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+    cameraEntity->setPosition(QVector3D(0, 0, 800.0f));
+    cameraEntity->setUpVector(QVector3D(0, 1, 0));
+    cameraEntity->setViewCenter(QVector3D(0, 0, 0));
+
+    Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+    Qt3DRender::QDirectionalLight *light = new Qt3DRender::QDirectionalLight(lightEntity);
+    light->setColor("gray");
+    light->setIntensity(1);
+
+    lightEntity->addComponent(light);
+    Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+    lightTransform->setTranslation(cameraEntity->position());
+    lightEntity->addComponent(lightTransform);
+
+    // For camera controls
+    Qt3DExtras::QFirstPersonCameraController *camController = new Qt3DExtras::QFirstPersonCameraController(rootEntity);
+    camController->setCamera(cameraEntity);
+
+    // Cylinder shape data
+    Qt3DRender::QMesh *my_mesh = new Qt3DRender::QMesh();
+    my_mesh->setSource(QUrl::fromLocalFile("D:/Projects/Interface/resources/govde_1.stl"));
+    qDebug() << my_mesh->status();
+
+    // Satellite Mesh Transform
+    satelliteTransform = new Qt3DCore::QTransform();
+    satelliteTransform->setScale(1.5f); //-2.0f, 0.6f, 0.5f
+    satelliteTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(-2.0f, 0.6f, 0.5f), 45.0f));
+    satelliteTransform->setTranslation(QVector3D(-5.0f, 4.0f, -1.5));
+
+    Qt3DExtras::QPhongMaterial *meshMaterial = new Qt3DExtras::QPhongMaterial();
+    meshMaterial->setDiffuse(QColor(Qt::gray));
+    meshMaterial->setAmbient(QColor(Qt::gray));
+    meshMaterial->setSpecular(QColor(0,255,0));
+
+    Qt3DRender::QSceneLoader * specs = new Qt3DRender::QSceneLoader();
+    specs->setSource(QUrl::fromLocalFile("D:/Projects/Interface/resources/govde_1.stl"));
+    Sleep(2000);
+    qDebug() << specs->status();
+
+    // Cylinder
+    satelliteEntity = new Qt3DCore::QEntity(rootEntity);
+    satelliteEntity->addComponent(my_mesh);
+    satelliteEntity->addComponent(meshMaterial);
+    satelliteEntity->addComponent(satelliteTransform);
+
+    // Set root object of the scene
+    view->setRootEntity(rootEntity);
+
+
+    /*
+     *     int val1 = QRandomGenerator::global()->bounded(0, 55);
+    int val2 = QRandomGenerator::global()->bounded(0, 55);
+    int val3 = QRandomGenerator::global()->bounded(0, 55);
+    int val4 = QRandomGenerator::global()->bounded(0, 120);
+    satelliteTransform->setRotation(QQuaternion::fromAxisAndAngle(
+                                       QVector3D(val1, val2, val3), val4));
+
+     */
+}
+
 void MainWindow::OpenCVS()
 {
     cvsFile.setFileName("D:/deniro.csv");
@@ -409,7 +490,7 @@ void MainWindow::AddToTable()
 
 void MainWindow::ReadPort()
 {
-//    QString buffer;
+    QString buffer;
 //    buffer.append(arduino->readAll());
 //    if (buffer.size() > 62)
 //    {
@@ -418,7 +499,18 @@ void MainWindow::ReadPort()
 //    }
 
     //qDebug() << arduino->readAll().toUtf8();
-    qDebug() << arduino->readAll();
+//    QString as;;
+//    as = arduino->QSerialPort::read(5);
+//    qDebug() << as;
+
+
+    QByteArray serialBuffer;
+
+    serialBuffer = (arduino->readAll());
+    QString aa = QString::fromLatin1(serialBuffer).toUtf8();
+    qDebug() << aa;//.toLatin1();
+
+
 }
 
 void MainWindow::CreateStateTable()
@@ -482,9 +574,9 @@ void MainWindow::ConnectSerialPort()
     }
 
     arduino = new QSerialPort(this);
-    if(arduino_is_available)
+    if(true)
     {
-        arduino->setPortName(arduino_uno_port_name);
+        arduino->setPortName("COM1");
         if(!arduino->setBaudRate(QSerialPort::Baud9600))
             qDebug() << "error:" << arduino->errorString();
         if(!arduino->setDataBits(QSerialPort::Data8))
@@ -497,12 +589,15 @@ void MainWindow::ConnectSerialPort()
             qDebug() << "error:" << arduino->errorString();
         connect(arduino, &QSerialPort::readyRead, this, &MainWindow::ReadPort);
         if(!arduino->open(QIODevice::ReadWrite))
-            qDebug() << "error:a" << arduino->errorString();
+            qDebug() << "error:" << arduino->errorString();
+
     }
     else
     {
         qDebug() << "Couldn't find the correct port for the arduino.\n";
         //QMessageBox::information(this, "Serial Port Error", "Couldn't open serial port to arduino.");
+
+
     }
 }
 

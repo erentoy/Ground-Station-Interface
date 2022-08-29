@@ -18,7 +18,6 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -39,12 +38,12 @@ public:
     QLabel *turksatLogo;
     QLabel *opsatLogo;
     QLabel *opsatText;
-    QLabel *simulation;
     QWidget *layoutWidget;
     QGridLayout *gridLayout;
+    QPushButton *cvsBttn;
+    QPushButton *pushButton_2;
     QPushButton *calibrateBttn;
     QPushButton *separateBttn;
-    QPushButton *cvsBttn;
     QWidget *layoutWidget1;
     QHBoxLayout *horizontalLayout;
     QLabel *timeLabel;
@@ -52,13 +51,8 @@ public:
     QLabel *label_2;
     QLCDNumber *secLcd;
     QLabel *label_3;
-    QWidget *layoutWidget2;
-    QHBoxLayout *horizontalLayout_3;
-    QLineEdit *videoPath;
-    QPushButton *selectVideoBttn;
-    QPushButton *pushButton_2;
     QListView *stateList;
-    QWidget *layoutWidget3;
+    QWidget *layoutWidget2;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label;
     QComboBox *comboBox;
@@ -81,12 +75,8 @@ public:
     QWidget *payloadTAb;
     QWidget *containerTab;
     QWidget *widget_2;
-    QWidget *layoutWidget_2;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_6;
-    QComboBox *comboBox_2;
-    QPushButton *pushButton_4;
     QWidget *widget;
+    QWidget *simArea;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -109,13 +99,13 @@ public:
         telemetryTable->setGeometry(QRect(10, 760, 1891, 192));
         turksatLogo = new QLabel(centralwidget);
         turksatLogo->setObjectName(QString::fromUtf8("turksatLogo"));
-        turksatLogo->setGeometry(QRect(1660, 10, 241, 61));
+        turksatLogo->setGeometry(QRect(50, 10, 231, 61));
         opsatLogo = new QLabel(centralwidget);
         opsatLogo->setObjectName(QString::fromUtf8("opsatLogo"));
-        opsatLogo->setGeometry(QRect(20, 10, 111, 161));
+        opsatLogo->setGeometry(QRect(1750, 70, 131, 221));
         opsatText = new QLabel(centralwidget);
         opsatText->setObjectName(QString::fromUtf8("opsatText"));
-        opsatText->setGeometry(QRect(670, 10, 621, 61));
+        opsatText->setGeometry(QRect(560, 20, 621, 61));
         QPalette palette1;
         QBrush brush(QColor(0, 170, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -236,15 +226,22 @@ public:
         opsatText->setFrameShape(QFrame::NoFrame);
         opsatText->setFrameShadow(QFrame::Plain);
         opsatText->setTextFormat(Qt::PlainText);
-        simulation = new QLabel(centralwidget);
-        simulation->setObjectName(QString::fromUtf8("simulation"));
-        simulation->setGeometry(QRect(1550, 410, 301, 331));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(700, 140, 301, 51));
+        layoutWidget->setGeometry(QRect(850, 100, 401, 58));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
+        cvsBttn = new QPushButton(layoutWidget);
+        cvsBttn->setObjectName(QString::fromUtf8("cvsBttn"));
+
+        gridLayout->addWidget(cvsBttn, 0, 0, 1, 1);
+
+        pushButton_2 = new QPushButton(layoutWidget);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+
+        gridLayout->addWidget(pushButton_2, 0, 3, 1, 1);
+
         calibrateBttn = new QPushButton(layoutWidget);
         calibrateBttn->setObjectName(QString::fromUtf8("calibrateBttn"));
 
@@ -255,14 +252,9 @@ public:
 
         gridLayout->addWidget(separateBttn, 0, 2, 1, 1);
 
-        cvsBttn = new QPushButton(layoutWidget);
-        cvsBttn->setObjectName(QString::fromUtf8("cvsBttn"));
-
-        gridLayout->addWidget(cvsBttn, 0, 0, 1, 1);
-
         layoutWidget1 = new QWidget(centralwidget);
         layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(660, 80, 381, 41));
+        layoutWidget1->setGeometry(QRect(620, 170, 381, 41));
         horizontalLayout = new QHBoxLayout(layoutWidget1);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -295,44 +287,16 @@ public:
 
         horizontalLayout->addWidget(label_3);
 
-        layoutWidget2 = new QWidget(centralwidget);
-        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(160, 20, 401, 51));
-        horizontalLayout_3 = new QHBoxLayout(layoutWidget2);
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        videoPath = new QLineEdit(layoutWidget2);
-        videoPath->setObjectName(QString::fromUtf8("videoPath"));
-        videoPath->setEnabled(false);
-        QFont font1;
-        font1.setItalic(true);
-        font1.setUnderline(false);
-        videoPath->setFont(font1);
-        videoPath->setFrame(true);
-        videoPath->setReadOnly(true);
-
-        horizontalLayout_3->addWidget(videoPath);
-
-        selectVideoBttn = new QPushButton(layoutWidget2);
-        selectVideoBttn->setObjectName(QString::fromUtf8("selectVideoBttn"));
-
-        horizontalLayout_3->addWidget(selectVideoBttn);
-
-        pushButton_2 = new QPushButton(layoutWidget2);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-
-        horizontalLayout_3->addWidget(pushButton_2);
-
         stateList = new QListView(centralwidget);
         stateList->setObjectName(QString::fromUtf8("stateList"));
-        stateList->setGeometry(QRect(1100, 80, 221, 121));
-        layoutWidget3 = new QWidget(centralwidget);
-        layoutWidget3->setObjectName(QString::fromUtf8("layoutWidget3"));
-        layoutWidget3->setGeometry(QRect(160, 80, 401, 51));
-        horizontalLayout_2 = new QHBoxLayout(layoutWidget3);
+        stateList->setGeometry(QRect(50, 90, 221, 121));
+        layoutWidget2 = new QWidget(centralwidget);
+        layoutWidget2->setObjectName(QString::fromUtf8("layoutWidget2"));
+        layoutWidget2->setGeometry(QRect(390, 100, 401, 51));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(layoutWidget3);
+        label = new QLabel(layoutWidget2);
         label->setObjectName(QString::fromUtf8("label"));
         label->setEnabled(true);
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -343,7 +307,7 @@ public:
 
         horizontalLayout_2->addWidget(label);
 
-        comboBox = new QComboBox(layoutWidget3);
+        comboBox = new QComboBox(layoutWidget2);
         comboBox->addItem(QString());
         comboBox->addItem(QString());
         comboBox->addItem(QString());
@@ -359,7 +323,7 @@ public:
 
         horizontalLayout_2->addWidget(comboBox);
 
-        pushButton_3 = new QPushButton(layoutWidget3);
+        pushButton_3 = new QPushButton(layoutWidget2);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
 
         horizontalLayout_2->addWidget(pushButton_3);
@@ -367,7 +331,7 @@ public:
         graphicsTabWidget = new QTabWidget(centralwidget);
         graphicsTabWidget->setObjectName(QString::fromUtf8("graphicsTabWidget"));
         graphicsTabWidget->setEnabled(true);
-        graphicsTabWidget->setGeometry(QRect(10, 200, 1411, 531));
+        graphicsTabWidget->setGeometry(QRect(20, 230, 1381, 531));
         generalTab = new QWidget();
         generalTab->setObjectName(QString::fromUtf8("generalTab"));
         speedGraph = new QChartView(generalTab);
@@ -431,41 +395,12 @@ public:
         widget_2->setObjectName(QString::fromUtf8("widget_2"));
         widget_2->setGeometry(QRect(240, 40, 481, 291));
         graphicsTabWidget->addTab(containerTab, QString());
-        layoutWidget_2 = new QWidget(centralwidget);
-        layoutWidget_2->setObjectName(QString::fromUtf8("layoutWidget_2"));
-        layoutWidget_2->setGeometry(QRect(160, 136, 401, 51));
-        horizontalLayout_4 = new QHBoxLayout(layoutWidget_2);
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        label_6 = new QLabel(layoutWidget_2);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setEnabled(true);
-        sizePolicy1.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_4->addWidget(label_6);
-
-        comboBox_2 = new QComboBox(layoutWidget_2);
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->addItem(QString());
-        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
-        sizePolicy2.setHeightForWidth(comboBox_2->sizePolicy().hasHeightForWidth());
-        comboBox_2->setSizePolicy(sizePolicy2);
-        comboBox_2->setMaximumSize(QSize(16777215, 28));
-
-        horizontalLayout_4->addWidget(comboBox_2);
-
-        pushButton_4 = new QPushButton(layoutWidget_2);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-
-        horizontalLayout_4->addWidget(pushButton_4);
-
         widget = new QWidget(centralwidget);
         widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(1430, 90, 450, 300));
+        widget->setGeometry(QRect(1420, 380, 421, 341));
+        simArea = new QWidget(centralwidget);
+        simArea->setObjectName(QString::fromUtf8("simArea"));
+        simArea->setGeometry(QRect(1420, 20, 301, 331));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -477,7 +412,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        graphicsTabWidget->setCurrentIndex(2);
+        graphicsTabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -489,16 +424,13 @@ public:
         turksatLogo->setText(QCoreApplication::translate("MainWindow", "Turksat Logo", nullptr));
         opsatLogo->setText(QCoreApplication::translate("MainWindow", "Team Logo", nullptr));
         opsatText->setText(QCoreApplication::translate("MainWindow", "OPSAT GROUND STATION", nullptr));
-        simulation->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
+        cvsBttn->setText(QCoreApplication::translate("MainWindow", "Create .csv File", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Send Video", nullptr));
         calibrateBttn->setText(QCoreApplication::translate("MainWindow", "Calibrate", nullptr));
         separateBttn->setText(QCoreApplication::translate("MainWindow", "Separate", nullptr));
-        cvsBttn->setText(QCoreApplication::translate("MainWindow", "Create .cvs File", nullptr));
         timeLabel->setText(QCoreApplication::translate("MainWindow", "MISSION TIME:", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "min", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "sec", nullptr));
-        videoPath->setText(QCoreApplication::translate("MainWindow", "D:/Documents/video.mp4", nullptr));
-        selectVideoBttn->setText(QCoreApplication::translate("MainWindow", "Select Video", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "Send Video", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Telemetri Com Port:", nullptr));
         comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "Select Port", nullptr));
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "COM1", nullptr));
@@ -515,14 +447,6 @@ public:
         graphicsTabWidget->setTabText(graphicsTabWidget->indexOf(generalTab), QCoreApplication::translate("MainWindow", "General", nullptr));
         graphicsTabWidget->setTabText(graphicsTabWidget->indexOf(payloadTAb), QCoreApplication::translate("MainWindow", "Payload", nullptr));
         graphicsTabWidget->setTabText(graphicsTabWidget->indexOf(containerTab), QCoreApplication::translate("MainWindow", "Container", nullptr));
-        label_6->setText(QCoreApplication::translate("MainWindow", "Video Com Port:", nullptr));
-        comboBox_2->setItemText(0, QCoreApplication::translate("MainWindow", "Select Port", nullptr));
-        comboBox_2->setItemText(1, QCoreApplication::translate("MainWindow", "COM1", nullptr));
-        comboBox_2->setItemText(2, QCoreApplication::translate("MainWindow", "COM2", nullptr));
-        comboBox_2->setItemText(3, QCoreApplication::translate("MainWindow", "COM3", nullptr));
-        comboBox_2->setItemText(4, QCoreApplication::translate("MainWindow", "COM4", nullptr));
-
-        pushButton_4->setText(QCoreApplication::translate("MainWindow", "Connect", nullptr));
     } // retranslateUi
 
 };

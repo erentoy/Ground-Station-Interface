@@ -40,9 +40,9 @@
    <widget class="QLabel" name="turksatLogo">
     <property name="geometry">
      <rect>
-      <x>1660</x>
+      <x>50</x>
       <y>10</y>
-      <width>241</width>
+      <width>231</width>
       <height>61</height>
      </rect>
     </property>
@@ -53,10 +53,10 @@
    <widget class="QLabel" name="opsatLogo">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>111</width>
-      <height>161</height>
+      <x>1750</x>
+      <y>70</y>
+      <width>131</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="text">
@@ -66,8 +66,8 @@
    <widget class="QLabel" name="opsatText">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>10</y>
+      <x>560</x>
+      <y>20</y>
       <width>621</width>
       <height>61</height>
      </rect>
@@ -672,29 +672,30 @@
      <enum>Qt::PlainText</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="simulation">
-    <property name="geometry">
-     <rect>
-      <x>1550</x>
-      <y>410</y>
-      <width>301</width>
-      <height>331</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>140</y>
-      <width>301</width>
-      <height>51</height>
+      <x>850</x>
+      <y>100</y>
+      <width>401</width>
+      <height>58</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="cvsBttn">
+       <property name="text">
+        <string>Create .csv File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Send Video</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
       <widget class="QPushButton" name="calibrateBttn">
        <property name="text">
@@ -709,20 +710,13 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QPushButton" name="cvsBttn">
-       <property name="text">
-        <string>Create .cvs File</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>80</y>
+      <x>620</x>
+      <y>170</y>
       <width>381</width>
       <height>41</height>
      </rect>
@@ -771,59 +765,11 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>20</y>
-      <width>401</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLineEdit" name="videoPath">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="font">
-        <font>
-         <italic>true</italic>
-         <underline>false</underline>
-        </font>
-       </property>
-       <property name="text">
-        <string>D:/Documents/video.mp4</string>
-       </property>
-       <property name="frame">
-        <bool>true</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="selectVideoBttn">
-       <property name="text">
-        <string>Select Video</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>Send Video</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QListView" name="stateList">
     <property name="geometry">
      <rect>
-      <x>1100</x>
-      <y>80</y>
+      <x>50</x>
+      <y>90</y>
       <width>221</width>
       <height>121</height>
      </rect>
@@ -832,8 +778,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>80</y>
+      <x>390</x>
+      <y>100</y>
       <width>401</width>
       <height>51</height>
      </rect>
@@ -911,14 +857,14 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>200</y>
-      <width>1411</width>
+      <x>20</x>
+      <y>230</y>
+      <width>1381</width>
       <height>531</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="generalTab">
      <attribute name="title">
@@ -1127,89 +1073,23 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="layoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>136</y>
-      <width>401</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Video Com Port:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>28</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>Select Port</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>COM1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>COM2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>COM3</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>COM4</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>Connect</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>1430</x>
-      <y>90</y>
-      <width>450</width>
-      <height>300</height>
+      <x>1420</x>
+      <y>380</y>
+      <width>421</width>
+      <height>341</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="simArea" native="true">
+    <property name="geometry">
+     <rect>
+      <x>1420</x>
+      <y>20</y>
+      <width>301</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>

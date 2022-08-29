@@ -6,8 +6,9 @@
 #include <QChartView>
 #include <QLineSeries>
 #include <QSerialPort>
-// qcustomplot
-
+#include "simulationInclude.h"
+#include <QSceneLoader>
+#include <QPerVertexColorMaterial>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -31,6 +32,9 @@ private:
     QFile cvsFile;
     QSerialPort* arduino;
 
+    Qt3DCore::QEntity *satelliteEntity;
+    Qt3DCore::QTransform *satelliteTransform;
+
     static const quint16 arduino_uno_vendor_id = 6790;
     static const quint16 arduino_uno_product_id = 29987;
     int rowNumber = 1;
@@ -38,6 +42,7 @@ private:
     void AddData();
     void InitializeAltitudeGraph();
     void InitializeTelemetryTable();
+    void InitializeSimulation();
     void OpenCVS();
     void AddToTable();
     void ReadPort();

@@ -232,6 +232,7 @@ Makefile: ../Interface.pro C:/Qt/5.13.2/mingw73_32/mkspecs/win32-g++/qmake.conf 
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/resolve_config.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/exclusive_builds_post.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/default_post.prf \
+		C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/console.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/resources.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/qtquickcompiler.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/precompile_header.prf \
@@ -242,7 +243,6 @@ Makefile: ../Interface.pro C:/Qt/5.13.2/mingw73_32/mkspecs/win32-g++/qmake.conf 
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/uic.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/qmake_use.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/file_copies.prf \
-		C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/windows.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/testcase_targets.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/exceptions.prf \
 		C:/Qt/5.13.2/mingw73_32/mkspecs/features/yacc.prf \
@@ -252,11 +252,16 @@ Makefile: ../Interface.pro C:/Qt/5.13.2/mingw73_32/mkspecs/win32-g++/qmake.conf 
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5MultimediaWidgets.prl \
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5Widgets.prl \
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5Multimedia.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt53DExtras.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt53DRender.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt53DInput.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt53DLogic.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt53DCore.prl \
+		C:/Qt/5.13.2/mingw73_32/lib/Qt5Gamepad.prl \
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5Gui.prl \
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5SerialPort.prl \
 		C:/Qt/5.13.2/mingw73_32/lib/Qt5Network.prl \
-		C:/Qt/5.13.2/mingw73_32/lib/Qt5Core.prl \
-		C:/Qt/5.13.2/mingw73_32/lib/qtmain.prl
+		C:/Qt/5.13.2/mingw73_32/lib/Qt5Core.prl
 	$(QMAKE) -o Makefile ..\Interface.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/spec_pre.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/qdevice.pri:
@@ -427,6 +432,7 @@ C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/default_pre.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/resolve_config.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/exclusive_builds_post.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/default_post.prf:
+C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/console.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/resources.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/qtquickcompiler.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/precompile_header.prf:
@@ -437,7 +443,6 @@ C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/opengl.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/uic.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/qmake_use.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/file_copies.prf:
-C:/Qt/5.13.2/mingw73_32/mkspecs/features/win32/windows.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/testcase_targets.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/exceptions.prf:
 C:/Qt/5.13.2/mingw73_32/mkspecs/features/yacc.prf:
@@ -447,11 +452,16 @@ C:/Qt/5.13.2/mingw73_32/lib/Qt5Charts.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5MultimediaWidgets.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5Widgets.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5Multimedia.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt53DExtras.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt53DRender.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt53DInput.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt53DLogic.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt53DCore.prl:
+C:/Qt/5.13.2/mingw73_32/lib/Qt5Gamepad.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5Gui.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5SerialPort.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5Network.prl:
 C:/Qt/5.13.2/mingw73_32/lib/Qt5Core.prl:
-C:/Qt/5.13.2/mingw73_32/lib/qtmain.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ..\Interface.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
 

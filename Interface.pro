@@ -1,8 +1,10 @@
-QT       += core gui charts widgets serialport multimediawidgets
+QT       += core gui charts widgets serialport multimediawidgets 3dcore 3drender 3dinput 3dextras
+
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
+CONFIG += console
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -13,7 +15,8 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    simulationInclude.h
 
 FORMS += \
     mainwindow.ui
